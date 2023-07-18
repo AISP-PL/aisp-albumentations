@@ -6,18 +6,18 @@ import random
 import argparse
 import logging
 from helpers.annotations import ReadAnnotations
-from helpers.augumentations import Augment, transform_color
+from helpers.augumentations import Augment, transform_color, transform_shape
 from helpers.files import IsImageFile
 
 
-def GetImages(path : str) -> list:
+def GetImages(path: str) -> list:
     ''' Gets all images from directory as random list. '''
     # List of excluded files
     excludes = ['.', '..', './', '.directory']
 
     # Files : Filter only images
-    filenames = [ f"{path}{filename}" for filename in os.listdir(path) 
-                  if (filename not in excludes) and (IsImageFile(filename))]
+    filenames = [f'{path}{filename}' for filename in os.listdir(path)
+                 if (filename not in excludes) and (IsImageFile(filename))]
 
     # Step 0.1 - random shuffle list (for big datasets it gives randomization)
     random.shuffle(filenames)
@@ -25,7 +25,7 @@ def GetImages(path : str) -> list:
     return filenames
 
 
-def Process(path : str, arguments : argparse.Namespace):
+def Process(path: str, arguments: argparse.Namespace):
     ''' Process directory'''
     # Check : Path is None or empty
     if (path is None) or (path == ''):
@@ -35,22 +35,32 @@ def Process(path : str, arguments : argparse.Namespace):
     # Generated : Create output directory
     outputPath = os.path.join(path, 'generated')
     Path(outputPath).mkdir(parents=True, exist_ok=True)
-    
+
     # Images : Get all images from directory
     images = GetImages(path)
 
-
+    # Counter : Of processed images
+    processed_counter = 0
     # Step 1 - augment current images and make new
     for imagePath in images:
         # Annotations : Ready annotations if exists
         annotations = ReadAnnotations(imagePath)
 
+        # Check : Continue if not all images and not annotated.
+        if (arguments.all is False) and (annotations.exists is False):
+            continue
+
         # Augmentate image
         if (arguments.augumentColor):
             Augment(imagePath, outputPath, annotations, transform_color)
+        elif (arguments.augumentShape):
+            Augment(imagePath, outputPath, annotations, transform_shape)
 
-
-
+        # Counter : Increment
+        processed_counter += 1
+        # Check : Maximum number of created images
+        if (processed_counter >= arguments.iterations):
+            break
 
 
 if (__name__ == '__main__'):
@@ -65,10 +75,10 @@ if (__name__ == '__main__'):
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input', type=str,
                         required=True, help='Input path')
-    parser.add_argument('-ow', '--maxImageWidth', type=int, nargs='?', const=1280, default=1280,
-                        required=False, help='Output image width / network width')
-    parser.add_argument('-oh', '--maxImageHeight', type=int, nargs='?', const=1280, default=1280,
-                        required=False, help='Output image height / network height')
+    parser.add_argument('-n', '--iterations', type=int, nargs='?', const=300, default=300,
+                        required=False, help='Maximum number of created images')
+    parser.add_argument('-a', '--all', action='store_true',
+                        required=False, help='All images (annotated and not annotated). Defaut is only annotated.')
     parser.add_argument('-as', '--augumentShape', action='store_true',
                         required=False, help='Process extra image shape augmentation.')
     parser.add_argument('-ac', '--augumentColor', action='store_true',
@@ -77,5 +87,3 @@ if (__name__ == '__main__'):
 
     # Process
     Process(args.input, args)
-
-
