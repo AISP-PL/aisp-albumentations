@@ -14,14 +14,14 @@ transform_shape = A.Compose([
         A.MotionBlur(blur_limit=7, p=0.3),
     ], n=2),
     A.GridDistortion(num_steps=3, distort_limit=0.25, p=0.2),
-    A.RandomCrop(width=800, height=600, p=0.3),
+    A.RandomCrop(width=480, height=320, p=0.3),
     A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.2, rotate_limit=15,
                        p=0.7, border_mode=cv2.BORDER_CONSTANT),
     A.ElasticTransform(alpha_affine=9, p=0.2, border_mode=cv2.BORDER_CONSTANT),
     A.OpticalDistortion(distort_limit=0.2, p=0.2,
                         border_mode=cv2.BORDER_CONSTANT),
     A.ZoomBlur(max_factor=1.1, p=0.2),
-], bbox_params=A.BboxParams(format='yolo', min_area=100, min_visibility=0.2))
+], bbox_params=A.BboxParams(format='yolo', min_area=100, min_visibility=0.3))
 
 # Color : Albumentations transform
 transform_color = A.Compose([

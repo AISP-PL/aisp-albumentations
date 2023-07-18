@@ -5,6 +5,7 @@ import sys
 import random
 import argparse
 import logging
+from tqdm import tqdm
 from helpers.annotations import ReadAnnotations
 from helpers.augumentations import Augment, transform_color, transform_shape, transform_all
 from helpers.files import IsImageFile
@@ -41,6 +42,8 @@ def Process(path: str, arguments: argparse.Namespace):
 
     # Counter : Of processed images
     processed_counter = 0
+    # Preview: ProgressBar : Create
+    progress = tqdm(total=args.iterations, desc='Augumentation', unit='images')
     # Step 1 - augment current images and make new
     for imagePath in images:
         # Annotations : Ready annotations if exists
@@ -66,6 +69,7 @@ def Process(path: str, arguments: argparse.Namespace):
 
         # Counter : Increment
         processed_counter += 1
+        progress.update(1)
         # Check : Maximum number of created images
         if (processed_counter >= arguments.iterations):
             break
