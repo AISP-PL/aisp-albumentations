@@ -6,7 +6,7 @@ import random
 import argparse
 import logging
 from helpers.annotations import ReadAnnotations
-from helpers.augumentations import Augment, transform_color, transform_shape
+from helpers.augumentations import Augment, transform_color, transform_shape, transform_all
 from helpers.files import IsImageFile
 
 
@@ -52,9 +52,17 @@ def Process(path: str, arguments: argparse.Namespace):
 
         # Augmentate image
         if (arguments.augumentColor):
-            Augment(imagePath, outputPath, annotations, transform_color)
+            createdPath = Augment(imagePath, outputPath,
+                                  annotations, transform_color)
         elif (arguments.augumentShape):
-            Augment(imagePath, outputPath, annotations, transform_shape)
+            createdPath = Augment(imagePath, outputPath,
+                                  annotations, transform_shape)
+        else:
+            createdPath = Augment(imagePath, outputPath,
+                                  annotations, transform_all)
+
+        # Logging : Created image
+        logging.info(f'Created {createdPath}!')
 
         # Counter : Increment
         processed_counter += 1
@@ -79,6 +87,8 @@ if (__name__ == '__main__'):
                         required=False, help='Maximum number of created images')
     parser.add_argument('-a', '--all', action='store_true',
                         required=False, help='All images (annotated and not annotated). Defaut is only annotated.')
+    parser.add_argument('-aa', '--augumentAll', action='store_true',
+                        required=False, help='All image augmentations.')
     parser.add_argument('-as', '--augumentShape', action='store_true',
                         required=False, help='Process extra image shape augmentation.')
     parser.add_argument('-ac', '--augumentColor', action='store_true',

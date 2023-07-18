@@ -2,6 +2,7 @@
 from dataclasses import dataclass, field
 from enum import Enum
 import os
+from helpers.boxes import RectCheckFit, RectToXYWH, XYWHToRect
 from helpers.files import ChangeExtension
 
 
@@ -50,11 +51,17 @@ def ReadAnnotations(imagePath: str) -> list:
         with open(ChangeExtension(imagePath, '.txt'), 'r') as f:
             for line in f:
                 txtAnnote = (line.rstrip('\n').split(' '))
+                # Class number : Get
                 classNumber = int(txtAnnote[0])
+                # Bbox : Get
                 box = [float(txtAnnote[1]), float(txtAnnote[2]),
                        float(txtAnnote[3]), float(txtAnnote[4])]
+                rect = XYWHToRect(box)
+                rect = RectCheckFit(rect)
+                boxFitted = RectToXYWH(rect)
 
-                annotations.Append(box + [f'C{classNumber}'])
+                # Annotations : Append
+                annotations.Append(boxFitted + [f'C{classNumber}'])
 
     return annotations
 

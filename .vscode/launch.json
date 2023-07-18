@@ -9,7 +9,7 @@
             "type": "python",
             "request": "launch",
             "program": "${file}",
-            "args": ["-i", "tests/TestImages1/", "-as"],
+            "args": ["-i", "input/", "-ac"],
             "console": "integratedTerminal",
             "justMyCode": true
         }
