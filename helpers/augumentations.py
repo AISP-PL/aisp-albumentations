@@ -9,6 +9,11 @@ from helpers.hashing import GetRandomSha1
 
 # Shape : Albumentations transform
 transform_shape = A.Compose([
+    A.SomeOf([
+        A.ImageCompression(quality_lower=30, quality_upper=55, p=0.3),
+        A.MotionBlur(blur_limit=7, p=0.3),
+    ], n=2),
+    A.GridDistortion(num_steps=3, distort_limit=0.25, p=0.2),
     A.RandomCrop(width=800, height=600, p=0.3),
     A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.2, rotate_limit=15,
                        p=0.7, border_mode=cv2.BORDER_CONSTANT),
@@ -26,16 +31,20 @@ transform_color = A.Compose([
         A.RandomToneCurve(scale=0.5, p=0.3),
         A.HueSaturationValue(p=0.3),
         A.ColorJitter(p=0.2),
+        A.Equalize(p=0.3),
+        A.ToSepia(p=0.1),
     ], n=2),
     # Quality : Jpeg compression, multiplicative noise, downscale
     A.OneOf([
         A.ImageCompression(quality_lower=30, quality_upper=55, p=0.3),
         A.MultiplicativeNoise(p=0.2),
         A.Downscale(scale_min=0.4, scale_max=0.6, p=0.2),
-        A.MedianBlur(blur_limit=5, p=0.1),
+        A.MedianBlur(blur_limit=3, p=0.1),
         A.ISONoise(color_shift=(0.01, 0.08), intensity=(0.2, 0.8), p=0.1),
         A.PixelDropout(dropout_prob=0.1, p=0.1),
         A.Spatter(p=0.1),
+        A.Superpixels(p=0.1),
+        A.GlassBlur(sigma=0.2, max_delta=2, iterations=1, p=0.1),
     ]),
     # Weather : Dropouts, rain, snow, sun flare, fog
     A.OneOf([
