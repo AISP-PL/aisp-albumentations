@@ -85,7 +85,8 @@ def Augment(imagePath: str,
 
     # Image : Save
     cv2.imwrite(outputFilepath, transformed['image'])
-    # Annotations : Save
-    SaveAnnotations(ChangeExtension(outputFilepath, '.txt'), newAnnotations)
+    # Annotations : Save only if original exists
+    if annotations.exists:
+        SaveAnnotations(ChangeExtension(outputFilepath, '.txt'), newAnnotations)
 
     return outputFilepath
