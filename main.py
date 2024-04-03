@@ -50,7 +50,12 @@ def Process(path: str, arguments: argparse.Namespace):
         annotations = ReadAnnotations(imagePath)
 
         # Check : Continue if not all images and not annotated.
-        if (arguments.all is False) and (annotations.exists is False):
+        if (arguments.all is False):
+            continue
+        
+        # Check : Annotations not found
+        if (annotations.exists is False):
+            logging.warning(f'Annotations not found for {imagePath}! Please provide annotations first!')
             continue
 
         # Augmentate image
