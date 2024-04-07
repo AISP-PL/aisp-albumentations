@@ -1,13 +1,16 @@
 #!/usr/bin/python3
-import os
-from pathlib import Path
-import sys
-import random
 import argparse
 import logging
+import os
+import random
+import sys
+from pathlib import Path
+
 from tqdm import tqdm
+
 from helpers.annotations import ReadAnnotations
-from helpers.augumentations import Augment, transform_color, transform_shape, transform_all
+from helpers.augumentations import (Augment, transform_all, transform_color,
+                                    transform_shape)
 from helpers.files import IsImageFile
 
 
@@ -17,7 +20,7 @@ def GetImages(path: str) -> list:
     excludes = ['.', '..', './', '.directory']
 
     # Files : Filter only images
-    filenames = [f'{path}{filename}' for filename in os.listdir(path)
+    filenames = [os.path.join(path, filename) for filename in os.listdir(path)
                  if (filename not in excludes) and (IsImageFile(filename))]
 
     # Step 0.1 - random shuffle list (for big datasets it gives randomization)
@@ -53,9 +56,7 @@ def Process(path: str, arguments: argparse.Namespace):
         if (arguments.all is False) and (annotations.exists is False):
             logging.warning(f'Annotations not found for {imagePath}! Please provide annotations first or add --all !')
             continue
-        
-        # Check : Annotations not found
-            continue
+
 
         # Augmentate image
         if (arguments.augumentColor):
@@ -67,6 +68,10 @@ def Process(path: str, arguments: argparse.Namespace):
         else:
             createdPath = Augment(imagePath, outputPath,
                                   annotations, transform_all)
+
+        # Check : Created path is None
+        if (createdPath is None):
+            continue
 
         # Logging : Created image
         logging.info(f'Created {createdPath}!')

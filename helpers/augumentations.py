@@ -1,4 +1,6 @@
+import logging
 import os
+from typing import Optional
 import albumentations as A
 import cv2
 
@@ -67,11 +69,14 @@ transform_all = A.Compose([
 def Augment(imagePath: str,
             outputDirectory: str,
             annotations: Annotations,
-            transformations) -> str:
+            transformations) -> Optional[str]:
     ''' Read image, augment image and bboxes and save it to new file. '''
 
     # Read image
     image = cv2.imread(imagePath)
+    if image is None : 
+        logging.error(f'Image not found: {imagePath}!')
+        return None
 
     # Augmentate image
     transformed = transformations(image=image, bboxes=annotations.annotations)
