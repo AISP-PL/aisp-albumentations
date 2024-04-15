@@ -43,6 +43,9 @@ def Process(path: str, arguments: argparse.Namespace):
     # Images : Get all images from directory
     images = GetImages(path)
 
+    # Random : Shuffle all images for randomization
+    images = random.shuffle(images)
+
     # Counter : Of processed images
     processed_counter = 0
     # Preview: ProgressBar : Create
