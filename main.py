@@ -23,9 +23,6 @@ def GetImages(path: str) -> list:
     filenames = [os.path.join(path, filename) for filename in os.listdir(path)
                  if (filename not in excludes) and (IsImageFile(filename))]
 
-    # Step 0.1 - random shuffle list (for big datasets it gives randomization)
-    random.shuffle(filenames)
-
     return filenames
 
 
@@ -42,9 +39,12 @@ def Process(path: str, arguments: argparse.Namespace):
 
     # Images : Get all images from directory
     images = GetImages(path)
+    if (len(images) == 0):
+        logging.error('No images found in directory!')
+        return
 
     # Random : Shuffle all images for randomization
-    images = random.shuffle(images)
+    random.shuffle(images)
 
     # Counter : Of processed images
     processed_counter = 0
