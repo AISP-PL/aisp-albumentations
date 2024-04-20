@@ -83,6 +83,30 @@ def transform_median_blur_make() -> A.Compose:
                      bbox_params=A.BboxParams(format='yolo', min_area=100, min_visibility=0.3))
 
 
+def transform_snow_make() -> A.Compose:
+    ''' Create snow transformation.'''
+    return A.Compose([A.RandomSnow(p=0.999)],
+                     bbox_params=A.BboxParams(format='yolo', min_area=100, min_visibility=0.3))
+
+
+def transform_rain_make() -> A.Compose:
+    ''' Create rain transformation.'''
+    return A.Compose([A.RandomRain(drop_length=10, blur_value=4, p=0.999)],
+                     bbox_params=A.BboxParams(format='yolo', min_area=100, min_visibility=0.3))
+
+def transform_fog_make() -> A.Compose:
+    ''' Create fog transformation.'''
+    return A.Compose([A.RandomFog(fog_coef_lower=0.1, fog_coef_upper=0.5, alpha_coef=0.5, p=0.999)],
+                     bbox_params=A.BboxParams(format='yolo', min_area=100, min_visibility=0.3))
+
+def transform_sunflare_make() -> A.Compose:
+    ''' Create sunflare transformation.'''
+    return A.Compose([A.RandomSunFlare(src_radius=260, num_flare_circles_lower=2, num_flare_circles_upper=6, p=0.999)],
+                     bbox_params=A.BboxParams(format='yolo', min_area=100, min_visibility=0.3))
+
+
+
+
 # Color : Albumentations transform
 transform_color = A.Compose([
     # Colors : Brightnes, contrast, tone curve, hue, saturation, value

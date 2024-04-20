@@ -14,9 +14,11 @@ from helpers.augumentations import (Augment, transform_all,
                                     transform_blur_make, transform_color,
                                     transform_compression_make,
                                     transform_crop_make,
-                                    transform_degrade_make,
+                                    transform_degrade_make, transform_fog_make,
                                     transform_median_blur_make,
-                                    transform_rotate_make, transform_shape)
+                                    transform_rain_make, transform_rotate_make,
+                                    transform_shape, transform_snow_make,
+                                    transform_sunflare_make)
 from helpers.files import IsImageFile
 
 
@@ -96,6 +98,34 @@ def Process(path: str, arguments: argparse.Namespace):
             except Exception as e:
                 logging.error(f'Degrading image failed: {e}')
 
+        # Snow : Image
+        if (arguments.snow):
+            try:
+                created_path = Augment(imagePath, outputPath, annotations, transform_snow_make())
+            except Exception as e:
+                logging.error(f'Snowing image failed: {e}')
+
+        # Rain : Image
+        if (arguments.rain):
+            try:
+                created_path = Augment(imagePath, outputPath, annotations, transform_rain_make())
+            except Exception as e:
+                logging.error(f'Raining image failed: {e}')
+
+        # Fog : Image
+        if (arguments.fog):
+            try:
+                created_path = Augment(imagePath, outputPath, annotations, transform_fog_make())
+            except Exception as e:
+                logging.error(f'Fogging image failed: {e}')
+
+        # Sunflare : Image
+        if (arguments.sunflare):
+            try:
+                created_path = Augment(imagePath, outputPath, annotations, transform_sunflare_make())
+            except Exception as e:
+                logging.error(f'Sunflaring image failed: {e}')
+
 
         # Blur : Image
         if (arguments.blur):
@@ -164,6 +194,11 @@ if (__name__ == '__main__'):
                         required=False, help='compression image quality.')
     parser.add_argument('-dd', '--degrade', action='store_true',
                         required=False, help='Degrade image quality.')
+    parser.add_argument('-ss', '--snow', action='store_true',
+                        required=False, help='Snow add.')
+    parser.add_argument('--rain', action='store_true', required=False, help='Rain add.')
+    parser.add_argument('--fog', action='store_true', required=False, help='Fog add.')
+    parser.add_argument('--sunflare', action='store_true', required=False, help='Sunflare add.')
     parser.add_argument('-bb', '--blur', action='store_true',
                         required=False, help='Blur image.')
     parser.add_argument('-mb', '--medianblur', action='store_true',
