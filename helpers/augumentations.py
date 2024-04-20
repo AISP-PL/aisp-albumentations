@@ -36,6 +36,7 @@ def transform_rotate_make(degrees: int = 30) -> A.Compose:
                      bbox_params=A.BboxParams(format='yolo', min_area=100, min_visibility=0.3))
 
 
+
 # Shape : Albumentations transform
 transform_shape = A.Compose([
     A.SomeOf([
@@ -56,6 +57,31 @@ transform_shape = A.Compose([
         A.RandomShadow(p=0.1),
     ], n=1),
 ], bbox_params=A.BboxParams(format='yolo', min_area=100, min_visibility=0.3))
+
+
+def transform_compression_make() -> A.Compose:
+    ''' Create compression transformation.'''
+    return A.Compose([A.ImageCompression(quality_lower=10, quality_upper=15, p=0.99)],
+                     bbox_params=A.BboxParams(format='yolo', min_area=100, min_visibility=0.3))
+
+
+def transform_degrade_make() -> A.Compose:
+    ''' Create compression transformation.'''
+    return A.Compose([A.Downscale(scale_min=0.25, scale_max=0.45, p=0.999), ],
+                     bbox_params=A.BboxParams(format='yolo', min_area=100, min_visibility=0.3))
+
+
+def transform_blur_make() -> A.Compose:
+    ''' Create blur transformation.'''
+    return A.Compose([A.Blur(blur_limit=7, p=0.99)],
+                     bbox_params=A.BboxParams(format='yolo', min_area=100, min_visibility=0.3))
+
+
+def transform_median_blur_make() -> A.Compose:
+    ''' Create median blur transformation.'''
+    return A.Compose([A.MedianBlur(blur_limit=7, p=0.99)],
+                     bbox_params=A.BboxParams(format='yolo', min_area=100, min_visibility=0.3))
+
 
 # Color : Albumentations transform
 transform_color = A.Compose([

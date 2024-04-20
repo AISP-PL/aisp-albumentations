@@ -10,9 +10,13 @@ from typing import Optional
 from tqdm import tqdm
 
 from helpers.annotations import ReadAnnotations
-from helpers.augumentations import (Augment, transform_all, transform_color,
-                                    transform_crop_make, transform_rotate_make,
-                                    transform_shape)
+from helpers.augumentations import (Augment, transform_all,
+                                    transform_blur_make, transform_color,
+                                    transform_compression_make,
+                                    transform_crop_make,
+                                    transform_degrade_make,
+                                    transform_median_blur_make,
+                                    transform_rotate_make, transform_shape)
 from helpers.files import IsImageFile
 
 
@@ -78,6 +82,35 @@ def Process(path: str, arguments: argparse.Namespace):
             except Exception as e:
                 logging.error(f'Rotating image failed: {e}')
 
+        # compression : Quality
+        if (arguments.compression):
+            try:
+                created_path = Augment(imagePath, outputPath, annotations, transform_compression_make())
+            except Exception as e:
+                logging.error(f'Degrading image failed: {e}')
+
+        # Degrade : Image
+        if (arguments.degrade):
+            try:
+                created_path = Augment(imagePath, outputPath, annotations, transform_degrade_make())
+            except Exception as e:
+                logging.error(f'Degrading image failed: {e}')
+
+
+        # Blur : Image
+        if (arguments.blur):
+            try:
+                created_path = Augment(imagePath, outputPath, annotations, transform_blur_make())
+            except Exception as e:
+                logging.error(f'Blurring image failed: {e}')
+
+        # Median Blur : Image
+        if (arguments.medianblur):
+            try:
+                created_path = Augment(imagePath, outputPath, annotations, transform_median_blur_make())
+            except Exception as e:
+                logging.error(f'Median blurring image failed: {e}')
+
 
         # Augmentate : Color
         if (arguments.augumentColor):
@@ -123,16 +156,24 @@ if (__name__ == '__main__'):
                         required=False, help='Maximum number of created images')
     parser.add_argument('-a', '--all', action='store_true',
                         required=False, help='All images (annotated and not annotated). Defaut is only annotated.')
+    parser.add_argument('-cc', '--crop', type=int, nargs='?', const=0, default=0,
+                        required=False, help='Augument by random Crop image (for ex 640).')
+    parser.add_argument('-rr', '--rotate', type=int, nargs='?', const=0, default=0,
+                        required=False, help='Augument by random Rotate image (for ex 90).')
+    parser.add_argument('-cm', '--compression', action='store_true',
+                        required=False, help='compression image quality.')
+    parser.add_argument('-dd', '--degrade', action='store_true',
+                        required=False, help='Degrade image quality.')
+    parser.add_argument('-bb', '--blur', action='store_true',
+                        required=False, help='Blur image.')
+    parser.add_argument('-mb', '--medianblur', action='store_true',
+                        required=False, help='Median blur image.')
     parser.add_argument('-aa', '--augumentAll', action='store_true',
                         required=False, help='All image augmentations.')
     parser.add_argument('-as', '--augumentShape', action='store_true',
                         required=False, help='Process extra image shape augmentation.')
     parser.add_argument('-ac', '--augumentColor', action='store_true',
                         required=False, help='Process extra image color augmentation.')
-    parser.add_argument('-cc', '--crop', type=int, nargs='?', const=0, default=0,
-                        required=False, help='Augument by random Crop image (for ex 640).')
-    parser.add_argument('-rr', '--rotate', type=int, nargs='?', const=0, default=0,
-                        required=False, help='Augument by random Rotate image (for ex 90).')
     args = parser.parse_args()
 
     # Process
