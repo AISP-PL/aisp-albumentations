@@ -5,11 +5,13 @@ import os
 import random
 import sys
 from pathlib import Path
+from typing import Optional
 
 from tqdm import tqdm
 
 from helpers.annotations import ReadAnnotations
 from helpers.augumentations import (Augment, transform_all, transform_color,
+                                    transform_crop_make, transform_rotate_make,
                                     transform_shape)
 from helpers.files import IsImageFile
 
@@ -52,6 +54,8 @@ def Process(path: str, arguments: argparse.Namespace):
     progress = tqdm(total=args.iterations, desc='Augumentation', unit='images')
     # Step 1 - augment current images and make new
     for imagePath in images:
+        # Created path : None
+        created_path : Optional[str] =  None
         # Annotations : Ready annotations if exists
         annotations = ReadAnnotations(imagePath)
 
@@ -60,24 +64,40 @@ def Process(path: str, arguments: argparse.Namespace):
             logging.warning(f'Annotations not found for {imagePath}! Please provide annotations first or add --all !')
             continue
 
+        # Crop :
+        if (arguments.crop != 0):
+            try:
+                created_path = Augment(imagePath, outputPath, annotations, transform_crop_make(arguments.crop))
+            except Exception as e:
+                logging.error(f'Cropping image failed: {e}')
 
-        # Augmentate image
+        # Rotate :
+        if (arguments.rotate != 0):
+            try:
+                created_path = Augment(imagePath, outputPath, annotations, transform_rotate_make(arguments.rotate))
+            except Exception as e:
+                logging.error(f'Rotating image failed: {e}')
+
+
+        # Augmentate : Color
         if (arguments.augumentColor):
-            createdPath = Augment(imagePath, outputPath,
+            created_path = Augment(imagePath, outputPath,
                                   annotations, transform_color)
+        # Augmentate : Shape
         elif (arguments.augumentShape):
-            createdPath = Augment(imagePath, outputPath,
+            created_path = Augment(imagePath, outputPath,
                                   annotations, transform_shape)
-        else:
-            createdPath = Augment(imagePath, outputPath,
+        # Augmentate : All
+        elif (arguments.augumentAll):
+            created_path = Augment(imagePath, outputPath,
                                   annotations, transform_all)
 
         # Check : Created path is None
-        if (createdPath is None):
+        if (created_path is None):
             continue
 
         # Logging : Created image
-        logging.info(f'Created {createdPath}!')
+        logging.info(f'Created {created_path}!')
 
         # Counter : Increment
         processed_counter += 1
@@ -109,6 +129,10 @@ if (__name__ == '__main__'):
                         required=False, help='Process extra image shape augmentation.')
     parser.add_argument('-ac', '--augumentColor', action='store_true',
                         required=False, help='Process extra image color augmentation.')
+    parser.add_argument('-cc', '--crop', type=int, nargs='?', const=0, default=0,
+                        required=False, help='Augument by random Crop image (for ex 640).')
+    parser.add_argument('-rr', '--rotate', type=int, nargs='?', const=0, default=0,
+                        required=False, help='Augument by random Rotate image (for ex 90).')
     args = parser.parse_args()
 
     # Process

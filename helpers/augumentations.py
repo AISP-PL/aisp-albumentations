@@ -1,6 +1,7 @@
 import logging
 import os
 from typing import Optional
+
 import albumentations as A
 import cv2
 
@@ -10,19 +11,50 @@ from helpers.hashing import GetRandomSha1
 
 
 # Shape : Albumentations transform
+def transform_crop_make(width: int = 640) -> A.Compose:
+    ''' Create crop transformation.'''
+
+    # Width and height must be divisible by 32
+    # - min width is 640
+    # - height almost 16/9 ratio to width
+    width = max(640, width)
+    height = int(width * 9 / 16)
+    height = height - (height % 32)
+    width = width - (width % 32)
+
+    return A.Compose([ A.RandomCrop(width=width, height=height, p=0.99)],
+                     bbox_params=A.BboxParams(format='yolo', min_area=100, min_visibility=0.3))
+
+
+def transform_rotate_make(degrees: int = 30) -> A.Compose:
+    ''' Create rotate transformation.'''
+
+    return A.Compose([A.Rotate(limit=degrees,
+                               border_mode=cv2.BORDER_CONSTANT,
+                               rotate_method="ellipse",
+                               p=0.99)],
+                     bbox_params=A.BboxParams(format='yolo', min_area=100, min_visibility=0.3))
+
+
+# Shape : Albumentations transform
 transform_shape = A.Compose([
     A.SomeOf([
-        A.ImageCompression(quality_lower=30, quality_upper=55, p=0.3),
-        A.MotionBlur(blur_limit=7, p=0.3),
+        A.ImageCompression(quality_lower=30, quality_upper=55, p=0.1),
+        A.MotionBlur(blur_limit=3, p=0.1),
     ], n=2),
-    A.GridDistortion(num_steps=3, distort_limit=0.25, p=0.2),
-    A.RandomCrop(width=480, height=320, p=0.3),
-    A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.2, rotate_limit=15,
-                       p=0.7, border_mode=cv2.BORDER_CONSTANT),
-    A.ElasticTransform(alpha_affine=9, p=0.2, border_mode=cv2.BORDER_CONSTANT),
-    A.OpticalDistortion(distort_limit=0.2, p=0.2,
-                        border_mode=cv2.BORDER_CONSTANT),
-    A.ZoomBlur(max_factor=1.1, p=0.2),
+    A.GridDistortion(num_steps=3, distort_limit=0.25, p=0.1),
+    A.SomeOf([
+        A.RandomCrop(width=480, height=320, p=0.60),
+        A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.2, rotate_limit=15,p=0.25, border_mode=cv2.BORDER_CONSTANT),
+        A.ElasticTransform(alpha_affine=9, p=0.2, border_mode=cv2.BORDER_CONSTANT),
+    ], n=1),
+    A.SomeOf([
+        A.OpticalDistortion(distort_limit=0.2, p=0.2,
+                            border_mode=cv2.BORDER_CONSTANT),
+        A.ZoomBlur(max_factor=1.1, p=0.2),
+        A.GaussNoise(p=0.2),
+        A.RandomShadow(p=0.1),
+    ], n=1),
 ], bbox_params=A.BboxParams(format='yolo', min_area=100, min_visibility=0.3))
 
 # Color : Albumentations transform
@@ -74,7 +106,7 @@ def Augment(imagePath: str,
 
     # Read image
     image = cv2.imread(imagePath)
-    if image is None : 
+    if image is None :
         logging.error(f'Image not found: {imagePath}!')
         return None
 
