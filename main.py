@@ -24,6 +24,7 @@ from helpers.augumentations import (
     transform_rotate_make,
     transform_shape,
     transform_snow_make,
+    transform_spatter_make,
     transform_sunflare_make,
 )
 from helpers.files import IsImageFile
@@ -152,6 +153,15 @@ def Process(path: str, arguments: argparse.Namespace):
             except Exception as e:
                 logging.error(f"Fogging image failed: {e}")
 
+        # Spatter : Image
+        if arguments.spatter:
+            try:
+                created_path = Augment(
+                    imagePath, outputPath, annotations, transform_spatter_make()
+                )
+            except Exception as e:
+                logging.error(f"Spattering image failed: {e}")
+
         # Sunflare : Image
         if arguments.sunflare:
             try:
@@ -274,6 +284,9 @@ if __name__ == "__main__":
         action="store_true",
         required=False,
         help="Degrade image quality.",
+    )
+    parser.add_argument(
+        "--spatter", action="store_true", required=False, help="Spatter add."
     )
     parser.add_argument(
         "-ss", "--snow", action="store_true", required=False, help="Snow add."

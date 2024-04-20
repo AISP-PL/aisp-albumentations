@@ -137,6 +137,14 @@ def transform_rain_make() -> A.Compose:
     )
 
 
+def transform_spatter_make() -> A.Compose:
+    """Create spatter transformation."""
+    return A.Compose(
+        [A.Spatter(p=0.999)],
+        bbox_params=A.BboxParams(format="yolo", min_area=100, min_visibility=0.3),
+    )
+
+
 def transform_fog_make() -> A.Compose:
     """Create fog transformation."""
     return A.Compose(
