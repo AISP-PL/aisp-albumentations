@@ -18,6 +18,7 @@ from helpers.augumentations import (
     transform_compression_make,
     transform_crop_make,
     transform_degrade_make,
+    transform_flip_make,
     transform_fog_make,
     transform_median_blur_make,
     transform_rain_make,
@@ -107,6 +108,15 @@ def Process(path: str, arguments: argparse.Namespace):
                 )
             except Exception as e:
                 logging.error(f"Rotating image failed: {e}")
+
+        # Flip : Image
+        if arguments.flip:
+            try:
+                created_path = Augment(
+                    imagePath, outputPath, annotations, transform_flip_make()
+                )
+            except Exception as e:
+                logging.error(f"Flipping image failed: {e}")
 
         # compression : Quality
         if arguments.compression:
@@ -252,7 +262,6 @@ if __name__ == "__main__":
         help="All images (annotated and not annotated). Defaut is only annotated.",
     )
     parser.add_argument(
-        "-cc",
         "--crop",
         type=int,
         nargs="?",
@@ -262,7 +271,6 @@ if __name__ == "__main__":
         help="Augument by random Crop image (for ex 640).",
     )
     parser.add_argument(
-        "-rr",
         "--rotate",
         type=int,
         nargs="?",
@@ -272,14 +280,12 @@ if __name__ == "__main__":
         help="Augument by random Rotate image (for ex 90).",
     )
     parser.add_argument(
-        "-cm",
         "--compression",
         action="store_true",
         required=False,
         help="compression image quality.",
     )
     parser.add_argument(
-        "-dd",
         "--degrade",
         action="store_true",
         required=False,
@@ -288,9 +294,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--spatter", action="store_true", required=False, help="Spatter add."
     )
-    parser.add_argument(
-        "-ss", "--snow", action="store_true", required=False, help="Snow add."
-    )
+    parser.add_argument("--snow", action="store_true", required=False, help="Snow add.")
     parser.add_argument(
         "--night",
         action="store_true",
@@ -303,7 +307,10 @@ if __name__ == "__main__":
         "--sunflare", action="store_true", required=False, help="Sunflare add."
     )
     parser.add_argument(
-        "-bb", "--blur", action="store_true", required=False, help="Blur image."
+        "--blur", action="store_true", required=False, help="Blur image."
+    )
+    parser.add_argument(
+        "--flip", action="store_true", required=False, help="Flip randomly image."
     )
     parser.add_argument(
         "-mb",

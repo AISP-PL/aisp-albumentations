@@ -44,6 +44,15 @@ def transform_rotate_make(degrees: int = 30) -> A.Compose:
     )
 
 
+def transform_flip_make() -> A.Compose:
+    """Create flip transformation."""
+
+    return A.Compose(
+        [A.HorizontalFlip(p=0.5), A.VerticalFlip(p=0.5)],
+        bbox_params=A.BboxParams(format="yolo", min_area=100, min_visibility=0.3),
+    )
+
+
 # Shape : Albumentations transform
 transform_shape = A.Compose(
     [
