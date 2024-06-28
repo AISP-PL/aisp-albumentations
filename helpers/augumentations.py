@@ -34,6 +34,22 @@ def transform_rotate_make(degrees: int = 30) -> A.Compose:
     return A.Compose(
         [
             A.Rotate(
+                limit=(degrees, degrees),
+                border_mode=cv2.BORDER_CONSTANT,
+                rotate_method="ellipse",
+                p=0.99,
+            )
+        ],
+        bbox_params=A.BboxParams(format="yolo", min_area=100, min_visibility=0.3),
+    )
+
+
+def transform_randrotate_make(degrees: int = 30) -> A.Compose:
+    """Create rotate transformation."""
+
+    return A.Compose(
+        [
+            A.Rotate(
                 limit=degrees,
                 border_mode=cv2.BORDER_CONSTANT,
                 rotate_method="ellipse",

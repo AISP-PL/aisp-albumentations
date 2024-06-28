@@ -22,6 +22,7 @@ from helpers.augumentations import (
     transform_fog_make,
     transform_median_blur_make,
     transform_rain_make,
+    transform_randrotate_make,
     transform_rotate_make,
     transform_shape,
     transform_snow_make,
@@ -105,6 +106,18 @@ def Process(path: str, arguments: argparse.Namespace):
                     outputPath,
                     annotations,
                     transform_rotate_make(arguments.rotate),
+                )
+            except Exception as e:
+                logging.error(f"Rotating image failed: {e}")
+
+        # RandRotate :
+        if arguments.randrotate != 0:
+            try:
+                created_path = Augment(
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_randrotate_make(arguments.randrotate),
                 )
             except Exception as e:
                 logging.error(f"Rotating image failed: {e}")
@@ -277,7 +290,16 @@ if __name__ == "__main__":
         const=0,
         default=0,
         required=False,
-        help="Augument by random Rotate image (for ex 90).",
+        help="Augument by direct degrees rotation (for ex 90).",
+    )
+    parser.add_argument(
+        "--randrotate",
+        type=int,
+        nargs="?",
+        const=0,
+        default=0,
+        required=False,
+        help="Random rotation from -degrees to degrees.",
     )
     parser.add_argument(
         "--compression",
