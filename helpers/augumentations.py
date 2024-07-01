@@ -146,6 +146,36 @@ def transform_median_blur_make() -> A.Compose:
     )
 
 
+def transform_brighten_make() -> A.Compose:
+    """Create random brighten transformation."""
+    return A.Compose(
+        [
+            A.RandomBrightnessContrast(
+                brightness_limit=(0.0, 0.7),
+                contrast_limit=(-0.4, 0.4),
+                always_apply=True,
+                p=0.999,
+            )
+        ],
+        bbox_params=A.BboxParams(format="yolo", min_area=100, min_visibility=0.3),
+    )
+
+
+def transform_darken_make() -> A.Compose:
+    """Create random darken transformation."""
+    return A.Compose(
+        [
+            A.RandomBrightnessContrast(
+                brightness_limit=(-0.7, 0.0),
+                contrast_limit=(-0.4, 0.4),
+                always_apply=True,
+                p=0.999,
+            )
+        ],
+        bbox_params=A.BboxParams(format="yolo", min_area=100, min_visibility=0.3),
+    )
+
+
 def transform_snow_make() -> A.Compose:
     """Create snow transformation."""
     return A.Compose(
@@ -166,6 +196,21 @@ def transform_spatter_make() -> A.Compose:
     """Create spatter transformation."""
     return A.Compose(
         [A.Spatter(p=0.999)],
+        bbox_params=A.BboxParams(format="yolo", min_area=100, min_visibility=0.3),
+    )
+
+
+def transform_isonoise_make() -> A.Compose:
+    """Create isonoise transformation."""
+    return A.Compose(
+        [
+            A.ISONoise(
+                color_shift=(0.04, 0.30),
+                intensity=(0.33, 1.25),
+                always_apply=True,
+                p=0.999,
+            )
+        ],
         bbox_params=A.BboxParams(format="yolo", min_area=100, min_visibility=0.3),
     )
 

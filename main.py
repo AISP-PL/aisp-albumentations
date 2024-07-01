@@ -14,12 +14,15 @@ from helpers.augumentations import (
     Augment,
     transform_all,
     transform_blur_make,
+    transform_brighten_make,
     transform_color,
     transform_compression_make,
     transform_crop_make,
+    transform_darken_make,
     transform_degrade_make,
     transform_flip_make,
     transform_fog_make,
+    transform_isonoise_make,
     transform_median_blur_make,
     transform_rain_make,
     transform_randrotate_make,
@@ -130,6 +133,33 @@ def Process(path: str, arguments: argparse.Namespace):
                 )
             except Exception as e:
                 logging.error(f"Flipping image failed: {e}")
+
+        # Darken : Image
+        if arguments.darken:
+            try:
+                created_path = Augment(
+                    imagePath, outputPath, annotations, transform_darken_make()
+                )
+            except Exception as e:
+                logging.error(f"Darkening image failed: {e}")
+
+        # Brighten : Image
+        if arguments.brighten:
+            try:
+                created_path = Augment(
+                    imagePath, outputPath, annotations, transform_brighten_make()
+                )
+            except Exception as e:
+                logging.error(f"Brightening image failed: {e}")
+
+        # IsoNoise : Image
+        if arguments.isonoise:
+            try:
+                created_path = Augment(
+                    imagePath, outputPath, annotations, transform_isonoise_make()
+                )
+            except Exception as e:
+                logging.error(f"Adding iso noise to image failed: {e}")
 
         # compression : Quality
         if arguments.compression:
@@ -300,6 +330,24 @@ if __name__ == "__main__":
         default=0,
         required=False,
         help="Random rotation from -degrees to degrees.",
+    )
+    parser.add_argument(
+        "--brighten",
+        action="store_true",
+        required=False,
+        help="Random make image brighten and adjust contrast.",
+    )
+    parser.add_argument(
+        "--darken",
+        action="store_true",
+        required=False,
+        help="Random make image darkne and adjust contrast.",
+    )
+    parser.add_argument(
+        "--isonoise",
+        action="store_true",
+        required=False,
+        help="Random add iso noise to image.",
     )
     parser.add_argument(
         "--compression",
