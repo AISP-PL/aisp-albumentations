@@ -200,6 +200,25 @@ def transform_spatter_make() -> A.Compose:
     )
 
 
+def transform_blackboxing_make(size: int = 50) -> A.Compose:
+    """Blackboxing parts of image."""
+    logging.warning("Blackboxing not supports bbox target!")
+    return A.Compose(
+        [
+            A.CoarseDropout(
+                min_holes=7,
+                max_holes=10,
+                min_height=size,
+                max_height=size,
+                min_width=size,
+                max_width=size,
+                always_apply=True,
+                p=0.999,
+            )
+        ],
+    )
+
+
 def transform_isonoise_make() -> A.Compose:
     """Create isonoise transformation."""
     return A.Compose(
@@ -298,7 +317,11 @@ transform_all = A.Compose(
 
 
 def Augment(
-    imagePath: str, outputDirectory: str, annotations: Annotations, transformations
+    imagePath: str,
+    outputDirectory: str,
+    annotations: Annotations,
+    transformations,
+    is_bboxes_transform: bool = True,
 ) -> Optional[str]:
     """Read image, augment image and bboxes and save it to new file."""
 
@@ -309,11 +332,16 @@ def Augment(
         return None
 
     # Augmentate image
-    transformed = transformations(image=image, bboxes=annotations.annotations)
+    if is_bboxes_transform:
+        transformed = transformations(image=image, bboxes=annotations.annotations)
+        new_annotations = transformed["bboxes"]
+    else:
+        transformed = transformations(image=image)
+        new_annotations = annotations.annotations
 
     # Annotations : Create new
     newAnnotations = Annotations(
-        imagePath, dataformat=annotations.dataformat, annotations=transformed["bboxes"]
+        imagePath, dataformat=annotations.dataformat, annotations=new_annotations
     )
 
     # Create filename

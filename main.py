@@ -13,6 +13,7 @@ from helpers.annotations import ReadAnnotations
 from helpers.augumentations import (
     Augment,
     transform_all,
+    transform_blackboxing_make,
     transform_blur_make,
     transform_brighten_make,
     transform_color,
@@ -215,6 +216,19 @@ def Process(path: str, arguments: argparse.Namespace):
             except Exception as e:
                 logging.error(f"Spattering image failed: {e}")
 
+        # Blackboxing : Image
+        if arguments.blackboxing:
+            try:
+                created_path = Augment(
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_blackboxing_make(size=arguments.blackboxing),
+                    is_bboxes_transform=False,
+                )
+            except Exception as e:
+                logging.error(f"Blackboxing image failed: {e}")
+
         # Sunflare : Image
         if arguments.sunflare:
             try:
@@ -363,6 +377,15 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--spatter", action="store_true", required=False, help="Spatter add."
+    )
+    parser.add_argument(
+        "--blackboxing",
+        required=False,
+        type=int,
+        nargs="?",
+        const=50,
+        default=50,
+        help="Blackboxing HxH parts of image.",
     )
     parser.add_argument("--snow", action="store_true", required=False, help="Snow add.")
     parser.add_argument(
