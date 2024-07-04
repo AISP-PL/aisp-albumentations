@@ -383,8 +383,8 @@ if __name__ == "__main__":
         required=False,
         type=int,
         nargs="?",
-        const=50,
-        default=50,
+        const=0,
+        default=0,
         help="Blackboxing HxH parts of image.",
     )
     parser.add_argument("--snow", action="store_true", required=False, help="Snow add.")
