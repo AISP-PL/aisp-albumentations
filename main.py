@@ -271,7 +271,7 @@ def Process(path: str, arguments: argparse.Namespace):
                     imagePath, outputPath, annotations, transform_spatter_small_make()
                 )
             except Exception as e:
-                logging.error(f"Spattering small image failed:
+                logging.error(f"Spattering small image failed: {e}")
 
         # Blackboxing : Image
         if arguments.blackboxing:
