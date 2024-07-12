@@ -21,7 +21,9 @@ from helpers.augumentations import (
     transform_crop_make,
     transform_darken_make,
     transform_degrade_make,
+    transform_flip_horizontal_make,
     transform_flip_make,
+    transform_flip_vertical_make,
     transform_fog_make,
     transform_isonoise_make,
     transform_median_blur_make,
@@ -125,6 +127,30 @@ def Process(path: str, arguments: argparse.Namespace):
                 )
             except Exception as e:
                 logging.error(f"Rotating image failed: {e}")
+
+        # Flip Horizontal : Image
+        if arguments.flip_horizontal:
+            try:
+                created_path = Augment(
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_flip_horizontal_make(),
+                )
+            except Exception as e:
+                logging.error(f"Flipping image failed: {e}")
+
+        # Flip Vertical : Image
+        if arguments.flip_vertical:
+            try:
+                created_path = Augment(
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_flip_vertical_make(),
+                )
+            except Exception as e:
+                logging.error(f"Flipping image failed: {e}")
 
         # Flip : Image
         if arguments.flip:
@@ -317,6 +343,18 @@ if __name__ == "__main__":
         action="store_true",
         required=False,
         help="All images (annotated and not annotated). Defaut is only annotated.",
+    )
+    parser.add_argument(
+        "--flip_horizontal",
+        action="store_true",
+        required=False,
+        help="Flip horizontal image.",
+    )
+    parser.add_argument(
+        "--flip_vertical",
+        action="store_true",
+        required=False,
+        help="Flip vertical image.",
     )
     parser.add_argument(
         "--crop",
