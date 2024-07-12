@@ -14,9 +14,11 @@ from helpers.augumentations import (
     Augment,
     transform_all,
     transform_blackboxing_make,
+    transform_blur_delicate_make,
     transform_blur_make,
     transform_brighten_make,
     transform_color,
+    transform_colorshift_make,
     transform_compression_make,
     transform_crop_make,
     transform_darken_make,
@@ -32,7 +34,9 @@ from helpers.augumentations import (
     transform_rotate_make,
     transform_shape,
     transform_snow_make,
+    transform_spatter_big_make,
     transform_spatter_make,
+    transform_spatter_small_make,
     transform_sunflare_make,
 )
 from helpers.files import IsImageFile
@@ -161,6 +165,15 @@ def Process(path: str, arguments: argparse.Namespace):
             except Exception as e:
                 logging.error(f"Flipping image failed: {e}")
 
+        # Color shift : Image
+        if arguments.colorshift:
+            try:
+                created_path = Augment(
+                    imagePath, outputPath, annotations, transform_colorshift_make()
+                )
+            except Exception as e:
+                logging.error(f"Color shifting image failed: {e}")
+
         # Darken : Image
         if arguments.darken:
             try:
@@ -242,6 +255,24 @@ def Process(path: str, arguments: argparse.Namespace):
             except Exception as e:
                 logging.error(f"Spattering image failed: {e}")
 
+        # Spatter big : Image
+        if arguments.spatter_big:
+            try:
+                created_path = Augment(
+                    imagePath, outputPath, annotations, transform_spatter_big_make()
+                )
+            except Exception as e:
+                logging.error(f"Spattering big image failed: {e}")
+
+        # Spatter small : Image
+        if arguments.spatter_small:
+            try:
+                created_path = Augment(
+                    imagePath, outputPath, annotations, transform_spatter_small_make()
+                )
+            except Exception as e:
+                logging.error(f"Spattering small image failed:
+
         # Blackboxing : Image
         if arguments.blackboxing:
             try:
@@ -272,6 +303,15 @@ def Process(path: str, arguments: argparse.Namespace):
                 )
             except Exception as e:
                 logging.error(f"Blurring image failed: {e}")
+
+        # Blur delicate : Image
+        if arguments.blur_delicate:
+            try:
+                created_path = Augment(
+                    imagePath, outputPath, annotations, transform_blur_delicate_make()
+                )
+            except Exception as e:
+                logging.error(f"Delicate blurring image failed: {e}")
 
         # Median Blur : Image
         if arguments.medianblur:
@@ -396,6 +436,12 @@ if __name__ == "__main__":
         help="Random make image darkne and adjust contrast.",
     )
     parser.add_argument(
+        "--colorshift",
+        action="store_true",
+        required=False,
+        help="Random color shift in image ",
+    )
+    parser.add_argument(
         "--isonoise",
         action="store_true",
         required=False,
@@ -415,6 +461,12 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--spatter", action="store_true", required=False, help="Spatter add."
+    )
+    parser.add_argument(
+        "--spatter_big", action="store_true", required=False, help="Spatter add."
+    )
+    parser.add_argument(
+        "--spatter_small", action="store_true", required=False, help="Spatter add."
     )
     parser.add_argument(
         "--blackboxing",
@@ -439,6 +491,12 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--blur", action="store_true", required=False, help="Blur image."
+    )
+    parser.add_argument(
+        "--blur_delicate",
+        action="store_true",
+        required=False,
+        help="Blur delicate image.",
     )
     parser.add_argument(
         "--flip", action="store_true", required=False, help="Flip randomly image."

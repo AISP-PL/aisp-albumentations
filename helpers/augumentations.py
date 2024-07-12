@@ -146,6 +146,14 @@ def transform_degrade_make() -> A.Compose:
     )
 
 
+def transform_blur_delicate_make() -> A.Compose:
+    """Create blur transformation."""
+    return A.Compose(
+        [A.Blur(blur_limit=3, p=0.99)],
+        bbox_params=A.BboxParams(format="yolo", min_area=100, min_visibility=0.3),
+    )
+
+
 def transform_blur_make() -> A.Compose:
     """Create blur transformation."""
     return A.Compose(
@@ -158,6 +166,23 @@ def transform_median_blur_make() -> A.Compose:
     """Create median blur transformation."""
     return A.Compose(
         [A.MedianBlur(blur_limit=7, p=0.99)],
+        bbox_params=A.BboxParams(format="yolo", min_area=100, min_visibility=0.3),
+    )
+
+
+def transform_colorshift_make() -> A.Compose:
+    """Create random brighten transformation."""
+    return A.Compose(
+        [
+            A.ColorJitter(
+                brightness=(1, 1),
+                contrast=(1, 1),
+                saturation=(1, 1),
+                hue=(-0.25, 0.25),
+                always_apply=True,
+                p=0.999,
+            )
+        ],
         bbox_params=A.BboxParams(format="yolo", min_area=100, min_visibility=0.3),
     )
 
@@ -208,10 +233,26 @@ def transform_rain_make() -> A.Compose:
     )
 
 
+def transform_spatter_big_make() -> A.Compose:
+    """Create spatter transformation."""
+    return A.Compose(
+        [A.Spatter(p=0.999, gauss_sigma=4.5)],
+        bbox_params=A.BboxParams(format="yolo", min_area=100, min_visibility=0.3),
+    )
+
+
 def transform_spatter_make() -> A.Compose:
     """Create spatter transformation."""
     return A.Compose(
         [A.Spatter(p=0.999)],
+        bbox_params=A.BboxParams(format="yolo", min_area=100, min_visibility=0.3),
+    )
+
+
+def transform_spatter_small_make() -> A.Compose:
+    """Create spatter transformation."""
+    return A.Compose(
+        [A.Spatter(p=0.999, gauss_sigma=0.5)],
         bbox_params=A.BboxParams(format="yolo", min_area=100, min_visibility=0.3),
     )
 
