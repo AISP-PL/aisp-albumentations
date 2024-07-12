@@ -167,8 +167,8 @@ def transform_brighten_make() -> A.Compose:
     return A.Compose(
         [
             A.RandomBrightnessContrast(
-                brightness_limit=(0.0, 0.7),
-                contrast_limit=(-0.4, 0.4),
+                brightness_limit=(0.0, 0.4),
+                contrast_limit=(-0.35, 0.35),
                 always_apply=True,
                 p=0.999,
             )
@@ -182,8 +182,8 @@ def transform_darken_make() -> A.Compose:
     return A.Compose(
         [
             A.RandomBrightnessContrast(
-                brightness_limit=(-0.7, 0.0),
-                contrast_limit=(-0.4, 0.4),
+                brightness_limit=(-0.4, 0.0),
+                contrast_limit=(-0.35, 0.35),
                 always_apply=True,
                 p=0.999,
             )
