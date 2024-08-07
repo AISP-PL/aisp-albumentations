@@ -23,12 +23,15 @@ from helpers.augumentations import (
     transform_crop_make,
     transform_darken_make,
     transform_degrade_make,
+    transform_downsize_padding_make,
     transform_flip_horizontal_make,
     transform_flip_make,
     transform_flip_vertical_make,
     transform_fog_make,
+    transform_gaussnoise_make,
     transform_isonoise_make,
     transform_median_blur_make,
+    transform_multinoise_make,
     transform_rain_make,
     transform_randrotate_make,
     transform_rotate_make,
@@ -201,11 +204,41 @@ def Process(path: str, arguments: argparse.Namespace):
             except Exception as e:
                 logging.error(f"Adding iso noise to image failed: {e}")
 
+        # GaussNoise : Image
+        if arguments.gaussnoise:
+            try:
+                created_path = Augment(
+                    imagePath, outputPath, annotations, transform_gaussnoise_make()
+                )
+            except Exception as e:
+                logging.error(f"Adding gauss noise to image failed: {e}")
+
+        # MultiNoise : Image
+        if arguments.multi_noise:
+            try:
+                created_path = Augment(
+                    imagePath, outputPath, annotations, transform_multinoise_make()
+                )
+            except Exception as e:
+                logging.error(f"Adding multi gauss noise to image failed: {e}")
+
         # compression : Quality
         if arguments.compression:
             try:
                 created_path = Augment(
                     imagePath, outputPath, annotations, transform_compression_make()
+                )
+            except Exception as e:
+                logging.error(f"Degrading image failed: {e}")
+
+        # Downsize padding : Image
+        if arguments.downsize_padding:
+            try:
+                created_path = Augment(
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_downsize_padding_make(),
                 )
             except Exception as e:
                 logging.error(f"Degrading image failed: {e}")
@@ -446,6 +479,24 @@ if __name__ == "__main__":
         action="store_true",
         required=False,
         help="Random add iso noise to image.",
+    )
+    parser.add_argument(
+        "--gaussnoise",
+        action="store_true",
+        required=False,
+        help="Random add gauss noise.",
+    )
+    parser.add_argument(
+        "--multi_noise",
+        action="store_true",
+        required=False,
+        help="Random multi gauss noise.",
+    )
+    parser.add_argument(
+        "--downsize_padding",
+        action="store_true",
+        required=False,
+        help="Downsize with black padding.",
     )
     parser.add_argument(
         "--compression",

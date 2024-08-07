@@ -146,6 +146,22 @@ def transform_degrade_make() -> A.Compose:
     )
 
 
+def transform_downsize_padding_make() -> A.Compose:
+    """Downsize with padding using ShiftScaleRotate"""
+    return A.Compose(
+        [
+            A.ShiftScaleRotate(
+                shift_limit=0.0,
+                rotate_limit=0,
+                scale_limit=0.2,
+                border_mode=cv2.BORDER_CONSTANT,
+                p=0.999,
+            )
+        ],
+        bbox_params=A.BboxParams(format="yolo", min_area=100, min_visibility=0.3),
+    )
+
+
 def transform_blur_delicate_make() -> A.Compose:
     """Create blur transformation."""
     return A.Compose(
@@ -283,6 +299,37 @@ def transform_isonoise_make() -> A.Compose:
             A.ISONoise(
                 color_shift=(0.04, 0.30),
                 intensity=(0.33, 1.25),
+                always_apply=True,
+                p=0.999,
+            )
+        ],
+        bbox_params=A.BboxParams(format="yolo", min_area=100, min_visibility=0.3),
+    )
+
+
+def transform_gaussnoise_make() -> A.Compose:
+    """Create gauss noise transformation."""
+    return A.Compose(
+        [
+            A.GaussNoise(
+                var_limit=(10.0, 70.0),
+                mean=0,
+                always_apply=True,
+                p=0.999,
+            )
+        ],
+        bbox_params=A.BboxParams(format="yolo", min_area=100, min_visibility=0.3),
+    )
+
+
+def transform_multinoise_make() -> A.Compose:
+    """Create multiplicative noise transformation."""
+    return A.Compose(
+        [
+            A.MultiplicativeNoise(
+                multiplier=(0.85, 1.15),
+                per_channel=True,
+                elementwise=True,
                 always_apply=True,
                 p=0.999,
             )
