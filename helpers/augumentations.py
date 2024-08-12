@@ -146,6 +146,22 @@ def transform_degrade_make() -> A.Compose:
     )
 
 
+def transform_clahe_make() -> A.Compose:
+    """Create CLAHE transformation."""
+    return A.Compose(
+        [A.CLAHE(p=0.999)],
+        bbox_params=A.BboxParams(format="yolo", min_area=100, min_visibility=0.3),
+    )
+
+
+def transform_equalize_make() -> A.Compose:
+    """Create equalize transformation."""
+    return A.Compose(
+        [A.Equalize(p=0.999)],
+        bbox_params=A.BboxParams(format="yolo", min_area=100, min_visibility=0.3),
+    )
+
+
 def transform_downsize_padding_make() -> A.Compose:
     """Downsize with padding using ShiftScaleRotate"""
     return A.Compose(

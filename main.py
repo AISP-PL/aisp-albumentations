@@ -17,6 +17,7 @@ from helpers.augumentations import (
     transform_blur_delicate_make,
     transform_blur_make,
     transform_brighten_make,
+    transform_clahe_make,
     transform_color,
     transform_colorshift_make,
     transform_compression_make,
@@ -24,6 +25,7 @@ from helpers.augumentations import (
     transform_darken_make,
     transform_degrade_make,
     transform_downsize_padding_make,
+    transform_equalize_make,
     transform_flip_horizontal_make,
     transform_flip_make,
     transform_flip_vertical_make,
@@ -176,6 +178,24 @@ def Process(path: str, arguments: argparse.Namespace):
                 )
             except Exception as e:
                 logging.error(f"Color shifting image failed: {e}")
+
+        # CLAHE : Image
+        if arguments.clahe:
+            try:
+                created_path = Augment(
+                    imagePath, outputPath, annotations, transform_clahe_make()
+                )
+            except Exception as e:
+                logging.error(f"CLAHE image failed: {e}")
+
+        # Equalize : Image
+        if arguments.equalize:
+            try:
+                created_path = Augment(
+                    imagePath, outputPath, annotations, transform_equalize_make()
+                )
+            except Exception as e:
+                logging.error(f"Equalizing image failed: {e}")
 
         # Darken : Image
         if arguments.darken:
@@ -467,6 +487,15 @@ if __name__ == "__main__":
         action="store_true",
         required=False,
         help="Random make image darkne and adjust contrast.",
+    )
+    parser.add_argument(
+        "--clahe", action="store_true", required=False, help="Apply CLAHE to image."
+    )
+    parser.add_argument(
+        "--equalize",
+        action="store_true",
+        required=False,
+        help="Equalize image.",
     )
     parser.add_argument(
         "--colorshift",
