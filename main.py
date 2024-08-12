@@ -197,6 +197,15 @@ def Process(path: str, arguments: argparse.Namespace):
             except Exception as e:
                 logging.error(f"Equalizing image failed: {e}")
 
+        # Sharpen : Image
+        if arguments.sharpen:
+            try:
+                created_path = Augment(
+                    imagePath, outputPath, annotations, transform_sharpen_make()
+                )
+            except Exception as e:
+                logging.error(f"Sharpening image failed: {e}")
+
         # Darken : Image
         if arguments.darken:
             try:
@@ -481,6 +490,12 @@ if __name__ == "__main__":
         action="store_true",
         required=False,
         help="Random make image brighten and adjust contrast.",
+    )
+    parser.add_argument(
+        "--sharpen",
+        action="store_true",
+        required=False,
+        help="Random make image sharpen.",
     )
     parser.add_argument(
         "--darken",
