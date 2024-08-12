@@ -38,6 +38,7 @@ from helpers.augumentations import (
     transform_randrotate_make,
     transform_rotate_make,
     transform_shape,
+    transform_sharpen_make,
     transform_snow_make,
     transform_spatter_big_make,
     transform_spatter_make,
