@@ -453,8 +453,10 @@ def Augment(
     imagePath: str,
     outputDirectory: str,
     annotations: Annotations,
-    transformations,
+    transformations: A.Compose,
+    transformation_name: str,
     is_bboxes_transform: bool = True,
+    use_sha: bool = True,
 ) -> Optional[str]:
     """Read image, augment image and bboxes and save it to new file."""
 
@@ -478,7 +480,13 @@ def Augment(
     )
 
     # Create filename
-    outputFilepath = os.path.join(outputDirectory, f"{GetRandomSha1()}.jpeg")
+    if use_sha:
+        outputFilepath = os.path.join(outputDirectory, f"{GetRandomSha1()}.jpeg")
+    else:
+        base_filename = os.path.splitext(os.path.basename(imagePath))[0]
+        outputFilepath = os.path.join(
+            outputDirectory, f"{base_filename}_{transformation_name}.jpeg"
+        )
 
     # Image : Save
     cv2.imwrite(outputFilepath, transformed["image"])

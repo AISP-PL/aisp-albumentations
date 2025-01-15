@@ -102,6 +102,8 @@ def Process(path: str, arguments: argparse.Namespace):
             )
             continue
 
+        use_sha = not arguments.disable_sha
+
         # Crop :
         if arguments.crop != 0:
             try:
@@ -110,6 +112,8 @@ def Process(path: str, arguments: argparse.Namespace):
                     outputPath,
                     annotations,
                     transform_crop_make(arguments.crop),
+                    transformation_name="crop",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Cropping image failed: {e}")
@@ -122,6 +126,8 @@ def Process(path: str, arguments: argparse.Namespace):
                     outputPath,
                     annotations,
                     transform_rotate_make(arguments.rotate),
+                    transformation_name="rotate",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Rotating image failed: {e}")
@@ -134,6 +140,8 @@ def Process(path: str, arguments: argparse.Namespace):
                     outputPath,
                     annotations,
                     transform_randrotate_make(arguments.randrotate),
+                    transformation_name="randrotate",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Rotating image failed: {e}")
@@ -146,6 +154,8 @@ def Process(path: str, arguments: argparse.Namespace):
                     outputPath,
                     annotations,
                     transform_flip_horizontal_make(),
+                    transformation_name="flip_horizontal",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Flipping image failed: {e}")
@@ -158,6 +168,8 @@ def Process(path: str, arguments: argparse.Namespace):
                     outputPath,
                     annotations,
                     transform_flip_vertical_make(),
+                    transformation_name="flip_vertical",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Flipping image failed: {e}")
@@ -166,7 +178,12 @@ def Process(path: str, arguments: argparse.Namespace):
         if arguments.flip:
             try:
                 created_path = Augment(
-                    imagePath, outputPath, annotations, transform_flip_make()
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_flip_make(),
+                    transformation_name="flip",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Flipping image failed: {e}")
@@ -175,7 +192,12 @@ def Process(path: str, arguments: argparse.Namespace):
         if arguments.colorshift:
             try:
                 created_path = Augment(
-                    imagePath, outputPath, annotations, transform_colorshift_make()
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_colorshift_make(),
+                    transformation_name="colorshift",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Color shifting image failed: {e}")
@@ -184,7 +206,12 @@ def Process(path: str, arguments: argparse.Namespace):
         if arguments.clahe:
             try:
                 created_path = Augment(
-                    imagePath, outputPath, annotations, transform_clahe_make()
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_clahe_make(),
+                    transformation_name="clahe",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"CLAHE image failed: {e}")
@@ -193,7 +220,12 @@ def Process(path: str, arguments: argparse.Namespace):
         if arguments.equalize:
             try:
                 created_path = Augment(
-                    imagePath, outputPath, annotations, transform_equalize_make()
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_equalize_make(),
+                    transformation_name="equalize",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Equalizing image failed: {e}")
@@ -202,7 +234,12 @@ def Process(path: str, arguments: argparse.Namespace):
         if arguments.sharpen:
             try:
                 created_path = Augment(
-                    imagePath, outputPath, annotations, transform_sharpen_make()
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_sharpen_make(),
+                    transformation_name="sharpen",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Sharpening image failed: {e}")
@@ -211,7 +248,12 @@ def Process(path: str, arguments: argparse.Namespace):
         if arguments.darken:
             try:
                 created_path = Augment(
-                    imagePath, outputPath, annotations, transform_darken_make()
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_darken_make(),
+                    transformation_name="darken",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Darkening image failed: {e}")
@@ -220,7 +262,12 @@ def Process(path: str, arguments: argparse.Namespace):
         if arguments.brighten:
             try:
                 created_path = Augment(
-                    imagePath, outputPath, annotations, transform_brighten_make()
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_brighten_make(),
+                    transformation_name="brighten",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Brightening image failed: {e}")
@@ -229,7 +276,12 @@ def Process(path: str, arguments: argparse.Namespace):
         if arguments.isonoise:
             try:
                 created_path = Augment(
-                    imagePath, outputPath, annotations, transform_isonoise_make()
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_isonoise_make(),
+                    transformation_name="isonoise",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Adding iso noise to image failed: {e}")
@@ -238,7 +290,12 @@ def Process(path: str, arguments: argparse.Namespace):
         if arguments.gaussnoise:
             try:
                 created_path = Augment(
-                    imagePath, outputPath, annotations, transform_gaussnoise_make()
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_gaussnoise_make(),
+                    transformation_name="gaussnoise",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Adding gauss noise to image failed: {e}")
@@ -247,7 +304,12 @@ def Process(path: str, arguments: argparse.Namespace):
         if arguments.multi_noise:
             try:
                 created_path = Augment(
-                    imagePath, outputPath, annotations, transform_multinoise_make()
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_multinoise_make(),
+                    transformation_name="multi_noise",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Adding multi gauss noise to image failed: {e}")
@@ -256,7 +318,12 @@ def Process(path: str, arguments: argparse.Namespace):
         if arguments.compression:
             try:
                 created_path = Augment(
-                    imagePath, outputPath, annotations, transform_compression_make()
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_compression_make(),
+                    transformation_name="compression",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Degrading image failed: {e}")
@@ -269,6 +336,8 @@ def Process(path: str, arguments: argparse.Namespace):
                     outputPath,
                     annotations,
                     transform_downsize_padding_make(),
+                    transformation_name="downsize_padding",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Degrading image failed: {e}")
@@ -277,7 +346,12 @@ def Process(path: str, arguments: argparse.Namespace):
         if arguments.degrade:
             try:
                 created_path = Augment(
-                    imagePath, outputPath, annotations, transform_degrade_make()
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_degrade_make(),
+                    transformation_name="degrade",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Degrading image failed: {e}")
@@ -286,7 +360,12 @@ def Process(path: str, arguments: argparse.Namespace):
         if arguments.snow:
             try:
                 created_path = Augment(
-                    imagePath, outputPath, annotations, transform_snow_make()
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_snow_make(),
+                    transformation_name="snow",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Snowing image failed: {e}")
@@ -295,7 +374,12 @@ def Process(path: str, arguments: argparse.Namespace):
         if arguments.rain:
             try:
                 created_path = Augment(
-                    imagePath, outputPath, annotations, transform_rain_make()
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_rain_make(),
+                    transformation_name="rain",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Raining image failed: {e}")
@@ -304,7 +388,12 @@ def Process(path: str, arguments: argparse.Namespace):
         if arguments.fog:
             try:
                 created_path = Augment(
-                    imagePath, outputPath, annotations, transform_fog_make()
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_fog_make(),
+                    transformation_name="fog",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Fogging image failed: {e}")
@@ -313,7 +402,12 @@ def Process(path: str, arguments: argparse.Namespace):
         if arguments.spatter:
             try:
                 created_path = Augment(
-                    imagePath, outputPath, annotations, transform_spatter_make()
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_spatter_make(),
+                    transformation_name="spatter",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Spattering image failed: {e}")
@@ -322,7 +416,12 @@ def Process(path: str, arguments: argparse.Namespace):
         if arguments.spatter_big:
             try:
                 created_path = Augment(
-                    imagePath, outputPath, annotations, transform_spatter_big_make()
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_spatter_big_make(),
+                    transformation_name="spatter_big",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Spattering big image failed: {e}")
@@ -331,7 +430,12 @@ def Process(path: str, arguments: argparse.Namespace):
         if arguments.spatter_small:
             try:
                 created_path = Augment(
-                    imagePath, outputPath, annotations, transform_spatter_small_make()
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_spatter_small_make(),
+                    transformation_name="spatter_small",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Spattering small image failed: {e}")
@@ -344,7 +448,9 @@ def Process(path: str, arguments: argparse.Namespace):
                     outputPath,
                     annotations,
                     transform_blackboxing_make(size=arguments.blackboxing),
+                    transformation_name="blackboxing",
                     is_bboxes_transform=False,
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Blackboxing image failed: {e}")
@@ -353,7 +459,12 @@ def Process(path: str, arguments: argparse.Namespace):
         if arguments.sunflare:
             try:
                 created_path = Augment(
-                    imagePath, outputPath, annotations, transform_sunflare_make()
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_sunflare_make(),
+                    transformation_name="sunflare",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Sunflaring image failed: {e}")
@@ -362,7 +473,12 @@ def Process(path: str, arguments: argparse.Namespace):
         if arguments.blur:
             try:
                 created_path = Augment(
-                    imagePath, outputPath, annotations, transform_blur_make()
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_blur_make(),
+                    transformation_name="blur",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Blurring image failed: {e}")
@@ -371,7 +487,12 @@ def Process(path: str, arguments: argparse.Namespace):
         if arguments.blur_delicate:
             try:
                 created_path = Augment(
-                    imagePath, outputPath, annotations, transform_blur_delicate_make()
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_blur_delicate_make(),
+                    transformation_name="blur_delicate",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Delicate blurring image failed: {e}")
@@ -380,7 +501,12 @@ def Process(path: str, arguments: argparse.Namespace):
         if arguments.medianblur:
             try:
                 created_path = Augment(
-                    imagePath, outputPath, annotations, transform_median_blur_make()
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_median_blur_make(),
+                    transformation_name="medianblur",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Median blurring image failed: {e}")
@@ -389,20 +515,46 @@ def Process(path: str, arguments: argparse.Namespace):
         if arguments.night:
             try:
                 created_path = Augment(
-                    imagePath, outputPath, annotations, transform_night_make()
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_night_make(),
+                    transformation_name="night",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Night vision image failed: {e}")
 
         # Augmentate : Color
         if arguments.augumentColor:
-            created_path = Augment(imagePath, outputPath, annotations, transform_color)
+            created_path = Augment(
+                imagePath,
+                outputPath,
+                annotations,
+                transform_color,
+                transformation_name="augment_color",
+                use_sha=use_sha,
+            )
         # Augmentate : Shape
         elif arguments.augumentShape:
-            created_path = Augment(imagePath, outputPath, annotations, transform_shape)
+            created_path = Augment(
+                imagePath,
+                outputPath,
+                annotations,
+                transform_shape,
+                transformation_name="augment_shape",
+                use_sha=use_sha,
+            )
         # Augmentate : All
         elif arguments.augumentAll:
-            created_path = Augment(imagePath, outputPath, annotations, transform_all)
+            created_path = Augment(
+                imagePath,
+                outputPath,
+                annotations,
+                transform_all,
+                transformation_name="augment_all",
+                use_sha=use_sha,
+            )
 
         # Check : Created path is None
         if created_path is None:
@@ -439,6 +591,13 @@ if __name__ == "__main__":
         default=300,
         required=False,
         help="Maximum number of created images",
+    )
+    parser.add_argument(
+        "--disable_sha",
+        action="store_true",
+        default=False,
+        required=False,
+        help="Disable SHA and append transformation type to filename",
     )
     parser.add_argument(
         "-a",
