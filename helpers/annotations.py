@@ -50,6 +50,10 @@ def ReadAnnotations(imagePath: str) -> list:
         # File : Open file
         with open(ChangeExtension(imagePath, '.txt'), 'r') as f:
             for line in f:
+                # Skip empty lines
+                if not line.strip():
+                    continue
+
                 txtAnnote = (line.rstrip('\n').split(' '))
                 # Class number : Get
                 classNumber = int(txtAnnote[0])
