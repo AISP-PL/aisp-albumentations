@@ -207,7 +207,12 @@ def Process(path: str, arguments: argparse.Namespace):
         if arguments.invert_colors:
             try:
                 created_path = Augment(
-                    imagePath, outputPath, annotations, transform_invert_colors_make()
+                    imagePath,
+                    outputPath,
+                    annotations,
+                    transform_invert_colors_make(),
+                    transformation_name="invert_colors",
+                    use_sha=use_sha,
                 )
             except Exception as e:
                 logging.error(f"Inverting colors image failed: {e}")
