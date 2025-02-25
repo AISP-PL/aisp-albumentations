@@ -232,6 +232,16 @@ def transform_colorshift_make() -> A.Compose:
     )
 
 
+def transform_invert_colors_make() -> A.Compose:
+    """Create random brighten transformation."""
+    return A.Compose(
+        [
+            A.InvertImg(p=0.999),
+        ],
+        bbox_params=A.BboxParams(format="yolo", min_area=100, min_visibility=0.3),
+    )
+
+
 def transform_brighten_make() -> A.Compose:
     """Create random brighten transformation."""
     return A.Compose(

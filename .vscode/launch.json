@@ -5,11 +5,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Current File",
+            "name": "Main",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
-            "args": ["-i", "input/", "-ac"],
+            "program": "${workspaceFolder}/main.py",
+            "args": ["-i", "tests/TestImages1/", "-ac"],
             "console": "integratedTerminal",
             "justMyCode": true
         }

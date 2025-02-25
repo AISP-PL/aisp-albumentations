@@ -31,6 +31,7 @@ from helpers.augumentations import (
     transform_flip_vertical_make,
     transform_fog_make,
     transform_gaussnoise_make,
+    transform_invert_colors_make,
     transform_isonoise_make,
     transform_median_blur_make,
     transform_multinoise_make,
@@ -201,6 +202,15 @@ def Process(path: str, arguments: argparse.Namespace):
                 )
             except Exception as e:
                 logging.error(f"Color shifting image failed: {e}")
+
+        # Invert colors : Image
+        if arguments.invert_colors:
+            try:
+                created_path = Augment(
+                    imagePath, outputPath, annotations, transform_invert_colors_make()
+                )
+            except Exception as e:
+                logging.error(f"Inverting colors image failed: {e}")
 
         # CLAHE : Image
         if arguments.clahe:
@@ -752,6 +762,12 @@ if __name__ == "__main__":
         action="store_true",
         required=False,
         help="Blur delicate image.",
+    )
+    parser.add_argument(
+        "--invert_colors",
+        action="store_true",
+        required=False,
+        help="Invert colors inside image.",
     )
     parser.add_argument(
         "--flip", action="store_true", required=False, help="Flip randomly image."
